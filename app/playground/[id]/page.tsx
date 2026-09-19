@@ -11,7 +11,7 @@ export default function Playground() {
 
   useEffect(() => {
     if (!params?.id) return;
-    fetch("/api/agents`)
+    fetch(`/api/agents`)
       .then(res => res.json())
       .then(data => {
         const found = data.agents.find((a: any) => a.id === params.id);

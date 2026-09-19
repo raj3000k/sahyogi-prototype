@@ -143,7 +143,7 @@ export default function Home(){
             });
         }
       } else {
-        await fetch("/api/agents/${draft.agent.id}`, {
+        await fetch(`/api/agents/${draft.agent.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -154,7 +154,7 @@ export default function Home(){
       console.error(e);
     }
   };
- const removeAgent = async (id: string) => {    try {      await fetch("/api/agents/${id}`, { method: "DELETE" });      window.location.reload();    } catch(e) {      console.error(e);    }  };
+ const removeAgent = async (id: string) => {    try {      await fetch(`/api/agents/${id}`, { method: "DELETE" });      window.location.reload();    } catch(e) {      console.error(e);    }  };
  const applyRoute=()=>{const p=new URLSearchParams(window.location.search);const nextTab=p.get("tab") as "home"|"sahyogis"|"roi"|null;const nextVertical=verticals.find(v=>v.short===p.get("vertical"))||verticals[0];const nextTeam=nextVertical.teams.find(t=>t.name===p.get("team"))||nextVertical.teams[0];setTab(nextTab||"home");setVertical(nextVertical);setTeam(nextTeam);setView((p.get("view") as "verticals"|"teams"|"agents")||"verticals")};
  useEffect(()=>{applyRoute();window.addEventListener("popstate",applyRoute);return()=>window.removeEventListener("popstate",applyRoute)},[]);
  const navigate=(nextTab:"home"|"sahyogis"|"roi",nextView:"verticals"|"teams"|"agents"="verticals",nextVertical=vertical,nextTeam=team)=>{setTab(nextTab);setView(nextView);setVertical(nextVertical);setTeam(nextTeam);const p=new URLSearchParams();if(nextTab!=="home")p.set("tab",nextTab);if(nextTab==="sahyogis"){p.set("view",nextView);p.set("vertical",nextVertical.short);if(nextView==="agents")p.set("team",nextTeam.name)}window.history.pushState({},"",p.toString()?`?${p}`:"/")};
