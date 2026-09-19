@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="./docs/assets/banner.png" alt="Sahyogi Platform Banner" width="100%" />
   
   <h1>SAHYOGI</h1>
   <p><b>Paytm's Autonomous AI Workforce Platform</b></p>
