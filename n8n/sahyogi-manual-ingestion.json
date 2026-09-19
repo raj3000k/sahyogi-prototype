@@ -1,0 +1,64 @@
+{
+  "name": "Sahyogi - Manual knowledge ingestion starter",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            { "name": "organization_id", "value": "paytm-innovation-lab" },
+            { "name": "agent_id", "value": "SL-MGR-014" },
+            { "name": "source_provider", "value": "google_drive" },
+            { "name": "source_external_id", "value": "demo-pos-growth-brief-v1" },
+            { "name": "title", "value": "POS Growth merchant onboarding brief" },
+            { "name": "content", "value": "Demo source: POS Growth owns merchant acquisition and activation. Escalate settlement or policy exceptions to the responsible human owner." },
+            { "name": "source_url", "value": "https://drive.google.com/replace-with-source-url" },
+            { "name": "sensitivity", "value": "internal" }
+          ]
+        }
+      },
+      "id": "set-demo-source",
+      "name": "Set normalised source",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/webhooks/n8n/knowledge-ingested",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Sahyogi-Webhook-Secret", "value": "replace-with-the-same-N8N_WEBHOOK_SECRET" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "send-to-sahyogi",
+      "name": "Send normalised source to Sahyogi",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [730, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[{ "node": "Set normalised source", "type": "main", "index": 0 }]] },
+    "Set normalised source": { "main": [[{ "node": "Send normalised source to Sahyogi", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "sahyogi-manual-ingestion-v1"
+}
