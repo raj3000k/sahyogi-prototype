@@ -52,9 +52,9 @@ export default function Home(){
   useEffect(() => {
     async function load() {
       try {
-        const t_res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/teams");
+        const t_res = await fetch("/api/teams");
         const t_data = await t_res.json();
-        const a_res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/agents");
+        const a_res = await fetch("/api/agents");
         const a_data = await a_res.json();
 
         const dbTeams = t_data.teams || [];
@@ -132,18 +132,18 @@ export default function Home(){
       };
       
       if (draft.isNew) {
-        const t_res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/teams");
+        const t_res = await fetch("/api/teams");
         const t_data = await t_res.json();
         const t = (t_data.teams || []).find((x:any) => x.name === team.name);
         if (t) {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/agents", {
+            await fetch("/api/agents", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...payload, team_id: t.id })
             });
         }
       } else {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/agents/${draft.agent.id}`, {
+        await fetch("/api/agents/${draft.agent.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -154,7 +154,7 @@ export default function Home(){
       console.error(e);
     }
   };
- const removeAgent = async (id: string) => {    try {      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/agents/${id}`, { method: "DELETE" });      window.location.reload();    } catch(e) {      console.error(e);    }  };
+ const removeAgent = async (id: string) => {    try {      await fetch("/api/agents/${id}`, { method: "DELETE" });      window.location.reload();    } catch(e) {      console.error(e);    }  };
  const applyRoute=()=>{const p=new URLSearchParams(window.location.search);const nextTab=p.get("tab") as "home"|"sahyogis"|"roi"|null;const nextVertical=verticals.find(v=>v.short===p.get("vertical"))||verticals[0];const nextTeam=nextVertical.teams.find(t=>t.name===p.get("team"))||nextVertical.teams[0];setTab(nextTab||"home");setVertical(nextVertical);setTeam(nextTeam);setView((p.get("view") as "verticals"|"teams"|"agents")||"verticals")};
  useEffect(()=>{applyRoute();window.addEventListener("popstate",applyRoute);return()=>window.removeEventListener("popstate",applyRoute)},[]);
  const navigate=(nextTab:"home"|"sahyogis"|"roi",nextView:"verticals"|"teams"|"agents"="verticals",nextVertical=vertical,nextTeam=team)=>{setTab(nextTab);setView(nextView);setVertical(nextVertical);setTeam(nextTeam);const p=new URLSearchParams();if(nextTab!=="home")p.set("tab",nextTab);if(nextTab==="sahyogis"){p.set("view",nextView);p.set("vertical",nextVertical.short);if(nextView==="agents")p.set("team",nextTeam.name)}window.history.pushState({},"",p.toString()?`?${p}`:"/")};
