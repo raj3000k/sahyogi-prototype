@@ -36,7 +36,6 @@ export default function Playground() {
         </div>
         <div className="pg-metrics">
           <span><b>100%</b><br/>Autonomy</span>
-          <span><b>{agent.context_score || 95}</b><br/>Context Score</span>
         </div>
       </header>
       
